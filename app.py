@@ -22,29 +22,43 @@ from utils.data_loader import get_example_wardrobe, get_empty_wardrobe
 
 def handle_query(user_query: str, wardrobe_choice: str) -> tuple[str, str, str]:
     """
-    Called by Gradio when the user submits a query.
-
-    Args:
-        user_query:     The text the user typed into the search box.
-        wardrobe_choice: Either "Example wardrobe" or "Empty wardrobe (new user)".
-
-    Returns:
-        A tuple of three strings:
-            (listing_text, outfit_suggestion, fit_card)
-        Each string maps to one of the three output panels in the UI.
-
-    TODO:
-        1. Guard against an empty query (return early with an error message).
-        2. Select the wardrobe based on wardrobe_choice.
-        3. Call run_agent() with the query and selected wardrobe.
-        4. If session["error"] is set, return the error in the first panel
-           and empty strings for the other two.
-        5. Otherwise, format session["selected_item"] into a readable listing_text
-           string and return it along with session["outfit_suggestion"] and
-           session["fit_card"].
+    Gradio handler → runs full agent and maps session → UI outputs.
     """
-    # TODO: implement this function
-    return "Agent not yet implemented.", "", ""
+
+    # 1. Guard against empty query
+    if not user_query or user_query.strip() == "":
+        return "Error: Please enter a search query.", "", ""
+
+    # 2. Select wardrobe
+    if wardrobe_choice == "Empty wardrobe (new user)":
+        wardrobe = get_empty_wardrobe()
+    else:
+        wardrobe = get_example_wardrobe()
+
+    # 3. Run agent
+    session = run_agent(user_query, wardrobe)
+
+    # 4. Handle error state (early termination from agent)
+    if session.get("error"):
+        return session["error"], "", ""
+
+    # 5. Format listing output safely
+    item = session.get("selected_item") or {}
+
+    listing_text = (
+        f"🧥 {item.get('title', 'Unknown Item')}\n\n"
+        f"💰 Price: ${item.get('price', 'N/A')}\n"
+        f"🏷️ Brand: {item.get('brand', 'Unknown')}\n"
+        f"📦 Condition: {item.get('condition', 'N/A')}\n"
+        f"🌐 Platform: {item.get('platform', 'N/A')}\n\n"
+        f"📝 Description:\n{item.get('description', 'No description available')}"
+    )
+
+    # 6. Get outputs from session
+    outfit = session.get("outfit_suggestion", "") or ""
+    fit_card = session.get("fit_card", "") or ""
+
+    return listing_text, outfit, fit_card
 
 
 # ── interface ─────────────────────────────────────────────────────────────────
