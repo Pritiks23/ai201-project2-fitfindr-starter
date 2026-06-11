@@ -125,9 +125,9 @@ flowchart TD
     C -->|no results| X[session.error + stop]
 
     C -->|results| D[Select Top Listing]
-    D --> E[suggest_outfit (Groq LLM)]
+    D --> E["suggest_outfit (Groq LLM)"]
 
-    E --> F[create_fit_card (Groq LLM)]
+    E --> F["create_fit_card (Groq LLM)"]
     F --> G[Return Session]
 
     subgraph SessionState[Session State]
@@ -140,6 +140,7 @@ flowchart TD
         S7[error]
     end
 ```
+
 ## AI Tool Plan
 
 I will use ChatGPT (for reasoning + prompt design) and Claude (for boilerplate code).
