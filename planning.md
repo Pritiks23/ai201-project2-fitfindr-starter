@@ -140,7 +140,7 @@ flowchart TD
         S7[error]
     end
 ```
-
+## AI tool Validation
 I will use ChatGPT for reasoning, prompt design, and debugging, and Claude for generating initial boilerplate implementations of functions in `tools.py` and `agent.py`.
 
 For each tool implementation, I will:
@@ -209,75 +209,111 @@ The generated implementation will be validated by:
 
 Write out what a full user interaction looks like from start to finish — tool call by tool call. Use a specific example query.
 
-**Example user query:** "I'm looking for a vintage graphic tee under $30. I mostly wear baggy jeans and chunky sneakers. What's out there and how would I style it?"
+---
 
-**Step 1:**
+### Example user query
+
+"I'm looking for a vintage graphic tee under $30. I mostly wear baggy jeans and chunky sneakers. What's out there and how would I style it?"
+
+---
+
+## Step 1
+
 The agent initializes a new session and parses the user query into structured filters:
 
-description: "vintage graphic tee"
-max_price: 30
-size: None (not explicitly provided)
+- description: "vintage graphic tee"
+- max_price: 30
+- size: None (not explicitly provided)
 
 It then calls the first tool:
 
+```python
 search_listings(
     description="vintage graphic tee",
     size=None,
     max_price=30.0
 )
+```
 
-**Step 2:**
-search_listings() loads all listings via load_listings(), filters by price and relevance, and returns a ranked list of matching items.
+---
+
+## Step 2
+
+`search_listings()` loads all listings via `load_listings()`, filters by price and relevance, and returns a ranked list of matching items.
 
 The agent selects the top-ranked listing (highest relevance score), for example:
 
-"Graphic Tee — 2003 Tour Bootleg Style"
+> Graphic Tee — 2003 Tour Bootleg Style
 
 This selected item is stored in:
 
+```python
 session["selected_item"]
-**Step 3:**
+```
+
+---
+
+## Step 3
+
 The agent calls the LLM-based tool:
 
+```python
 suggest_outfit(
     new_item=session["selected_item"],
     wardrobe=session["wardrobe"]
 )
+```
 
 The LLM generates 1–2 outfit suggestions combining:
 
-the selected vintage graphic tee
-wardrobe items such as baggy jeans and chunky sneakers
+- the selected vintage graphic tee
+- wardrobe items such as baggy jeans and chunky sneakers
 
 The response is stored in:
 
+```python
 session["outfit_suggestion"]
+```
 
-**Step 4:**
+---
+
+## Step 4
+
 The agent calls the final LLM-based formatting tool:
 
+```python
 create_fit_card(
     outfit=session["outfit_suggestion"],
     new_item=session["selected_item"]
 )
+```
 
 This produces a 2–4 sentence social-media-style caption describing:
 
-the thrifted item
-price + platform
-outfit vibe (grunge / 90s streetwear aesthetic)
+- the thrifted item
+- price + platform
+- outfit vibe (grunge / 90s streetwear aesthetic)
 
 The result is stored in:
 
+```python
 session["fit_card"]
+```
 
-**Final output to user:**
+---
+
+## Final output to user
+
 The system returns three UI outputs:
 
-Top listing found:
+**Top listing found:**
 A formatted version of the selected listing (title, price, platform, condition)
-Outfit idea:
+
+**Outfit idea:**
 LLM-generated styling suggestions combining wardrobe + new item
-Your fit card:
+
+**Your fit card:**
 A polished caption such as:
-“thrifted this faded graphic tee off depop for $24 and paired it with my baggy jeans + chunky sneakers for a full 90s grunge fit 🖤”
+
+> “thrifted this faded graphic tee off depop for $24 and paired it with my baggy jeans + chunky sneakers for a full 90s grunge fit 🖤”
+```
