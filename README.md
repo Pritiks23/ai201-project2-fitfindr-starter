@@ -203,6 +203,8 @@ The system uses a single mutable dictionary (`session`) as the source of truth.
 - Early exit enforced via `session["error"]`
 
 ---
+<img width="2366" height="1612" alt="image" src="https://github.com/user-attachments/assets/e6c4013f-4925-4d68-bf7d-0a991876904c" />
+
 
 # ⚠️ Error Handling Strategy (with Concrete Test Evidence)
 
