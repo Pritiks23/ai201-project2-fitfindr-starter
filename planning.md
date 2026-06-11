@@ -67,11 +67,6 @@ A 2–4 sentence stylized caption suitable for Instagram/TikTok/Depop posts.
 If outfit is empty → return an error-style caption (“No outfit generated — cannot create fit card.”).
 If LLM fails → return a fallback caption using only item metadata.
 
----
-
-### Additional Tools (if any)
-
-<!-- Copy the block above for any tools beyond the required three -->
 
 ---
 
@@ -122,6 +117,7 @@ For each tool, describe the specific failure mode you're handling and what the a
 
 ## Architecture
 
+```mermaid
 flowchart TD
     A[User Query] --> B[Parse Query]
     B --> C[search_listings]
@@ -134,7 +130,7 @@ flowchart TD
     E --> F[create_fit_card (Groq LLM)]
     F --> G[Return Session]
 
-    subgraph Session State
+    subgraph SessionState[Session State]
         S1[query]
         S2[parsed filters]
         S3[search_results]
@@ -143,9 +139,7 @@ flowchart TD
         S6[fit_card]
         S7[error]
     end
-
----
-
+```
 ## AI Tool Plan
 
 I will use ChatGPT (for reasoning + prompt design) and Claude (for boilerplate code).
