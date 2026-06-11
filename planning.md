@@ -143,48 +143,64 @@ flowchart TD
 
 ## AI Tool Plan
 
-I will use ChatGPT (for reasoning + prompt design) and Claude (for boilerplate code).
+I will use ChatGPT for reasoning, prompt design, and debugging, and Claude for generating initial boilerplate implementations of functions in tools.py and agent.py.
 
-For each tool:
+For each tool implementation, I will:
 
-I will provide the function signature from tools.py
-I will use the dataset schema (load_listings())
-I will design LLM prompts for:
-outfit generation (context-aware styling)
-fit card generation (social caption style)
+Use the function signature and docstring from tools.py
+Load and inspect structured data using load_listings()
+Design prompts for LLM-based tools that ensure:
+context-aware outfit generation grounded in wardrobe items
+concise, social-media-style fit card generation
 
-I will validate each tool by:
+Each tool will be validated independently before integration.
 
-running isolated unit tests per tool
-testing at least:
-1 normal case
-1 edge case (empty wardrobe or no listings)
-1 boundary case (price/size mismatch)
+Validation strategy:
 
+For every tool, I will test:
+
+1 standard case (expected valid input)
+1 edge case (empty wardrobe or no search results)
+1 boundary case (tight filters like low price or rare size)
+
+Outputs will be verified by checking:
+
+correctness of returned structure
+handling of missing/empty inputs
+consistency with dataset schema
 **Milestone 3 — Individual tool implementations:**
-For each tool:
+I will use Claude to generate initial implementations of each function in tools.py, guided by:
 
-I will provide the function signature from tools.py
-I will use the dataset schema (load_listings())
-I will design LLM prompts for:
-outfit generation (context-aware styling)
-fit card generation (social caption style)
+function signatures and docstrings
+dataset schema from load_listings()
+prompt design instructions for Groq LLM calls
+
+I will then refine outputs using ChatGPT to ensure:
+
+correct filtering logic in search_listings
+robust prompt behavior in suggest_outfit
+consistent formatting in create_fit_card
+
+Each tool will be tested in isolation using:
+
+3 test queries per tool
+at least 1 edge case per tool
 **Milestone 4 — Planning loop and state management:**
-I will use Claude to translate the planning loop into agent.py implementation logic.
+I will use Claude to translate the planning loop into agent.py, ensuring strict adherence to the session-based state machine defined in planning.md.
 
-Inputs provided:
+Inputs provided to the AI:
 
-full tool specs (this document)
-session state structure
+full tool specifications
+session state schema
 architecture diagram
 
-Verification steps:
+The generated implementation will be validated by:
 
-run CLI tests in agent.py
-confirm both:
-“happy path” full pipeline works
-“no results path” stops correctly at search stage
-inspect session dict at each stage for correctness
+running CLI tests in agent.py
+verifying both:
+happy path (full pipeline executes end-to-end)
+failure path (no search results triggers early termination)
+inspecting session dictionary at each step to confirm correct state propagation
 ---
 
 ## A Complete Interaction (Step by Step)
